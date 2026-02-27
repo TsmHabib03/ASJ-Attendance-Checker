@@ -288,7 +288,23 @@ try {
     // Fetch registered teachers for adviser dropdown (non-fatal)
     $teachers = [];
     try {
-        $sql = "SELECT id, COALESCE(employee_number, employee_id) as emp_uid, CONCAT(first_name, ' ', last_name) as fullname FROM teachers ORDER BY last_name, first_name";
+        // Detect which identifier column exists to build a compatible query
+        $idCandidates = ['Faculty_ID_Number', 'faculty_id_number', 'employee_number', 'employee_id'];
+        $idCol = null;
+        foreach ($idCandidates as $c) {
+            if (function_exists('columnExists') && columnExists($pdo, 'teachers', $c)) { $idCol = $c; break; }
+        }
+
+        // Build select list depending on available columns
+        if ($idCol !== null) {
+            // Use the resolved identifier plus name concatenation
+            $idExpr = $idCol === 'employee_number' || $idCol === 'employee_id' ? "COALESCE(employee_number, employee_id) as emp_uid" : "`$idCol` as emp_uid";
+            $sql = "SELECT id, {$idExpr}, CONCAT(COALESCE(first_name,''), ' ', COALESCE(last_name,'')) as fullname FROM teachers ORDER BY last_name, first_name";
+        } else {
+            // conservative fallback: select any name columns available
+            $sql = "SELECT id, '' as emp_uid, CONCAT(COALESCE(first_name,''), ' ', COALESCE(last_name,'')) as fullname FROM teachers ORDER BY last_name, first_name";
+        }
+
         $tstmt = $pdo->query($sql);
         if ($tstmt !== false) {
             $teachers = $tstmt->fetchAll(PDO::FETCH_ASSOC);
@@ -298,16 +314,16 @@ try {
         }
     } catch (Exception $e) {
         error_log("manage_sections: fetch teachers error: " . $e->getMessage());
-        // Try a simpler fallback select in case CONCAT or COALESCE caused issues
+        // final fallback: try selecting basic fields without expressions
         try {
-            $fsql = "SELECT id, employee_number as emp_uid, first_name, last_name FROM teachers ORDER BY last_name, first_name";
+            $fsql = "SELECT id, first_name, last_name FROM teachers ORDER BY last_name, first_name";
             $ft = $pdo->query($fsql);
             if ($ft !== false) {
                 $raw = $ft->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($raw as $r) {
                     $teachers[] = [
                         'id' => $r['id'],
-                        'emp_uid' => $r['employee_number'] ?? $r['emp_uid'] ?? '',
+                        'emp_uid' => '',
                         'fullname' => trim(($r['first_name'] ?? '') . ' ' . ($r['last_name'] ?? ''))
                     ];
                 }

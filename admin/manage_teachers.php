@@ -199,8 +199,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $message = "Teacher added successfully!";
                             $messageType = "success";
 
-                            // Clear form
-                            $_POST = [];
+                            // Redirect to edit page for the newly created teacher so QR is visible
+                            $newTeacherId = $pdo->lastInsertId();
+                            if ($newTeacherId) {
+                                header('Location: manage_teachers.php?id=' . intval($newTeacherId));
+                                exit;
+                            }
                         }
                     }
                 } else {
