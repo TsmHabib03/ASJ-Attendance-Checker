@@ -1,0 +1,7 @@
+[2026-02-27 21:11:41] REQUEST method=POST student_id=78 rawInput={"student_id":"78"} POST=[]
+[2026-02-27 21:11:41] STUDENT_LOOKUP id=78 found=1
+[2026-02-27 21:11:42] QR_GENERATION id=78 result=uploads/qrcodes/student_78.png
+[2026-02-27 21:11:42] EXCEPTION: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'updated_at' in 'field list'
+[2026-02-27 21:13:01] REQUEST method=POST student_id=78 rawInput={"student_id":"78"} POST=[]
+[2026-02-27 21:13:01] STUDENT_LOOKUP id=78 found=1
+[2026-02-27 21:13:02] QR_GENERATION id=78 result=uploads/qrcodes/student_78.png
