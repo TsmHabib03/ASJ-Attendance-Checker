@@ -341,14 +341,38 @@ try {
         throw new Exception('Database connection failed');
     }
     
-    $scannedCode = trim($_POST['lrn'] ?? '');
+    // Read LRN from form-encoded POST or JSON body (some clients may send JSON)
+    $postLrn = $_POST['lrn'] ?? null;
+    $rawInput = file_get_contents('php://input');
+    $jsonBody = null;
+    if ($rawInput) {
+        $decoded = json_decode($rawInput, true);
+        if (is_array($decoded)) {
+            $jsonBody = $decoded;
+        }
+    }
+
+    $scannedCodeRaw = trim($postLrn ?? $jsonBody['lrn'] ?? $jsonBody['code'] ?? $jsonBody['id'] ?? '');
+    $scannedCode = $scannedCodeRaw;
+
+    // Normalize scanned payload: some scanners include prefixes or extra text (e.g., "LRN:12345" or URLs).
+    // If the payload does not match an 11-13 digit LRN exactly, try to extract a contiguous 11-13 digit substring.
+    if (!preg_match('/^[0-9]{11,13}$/', $scannedCode)) {
+        if (preg_match('/([0-9]{11,13})/', $scannedCodeRaw, $m)) {
+            $scannedCode = $m[1];
+        }
+    }
+
+    // Debug log the raw and normalized scanned payloads for troubleshooting mismatches
+    error_log("mark_attendance: scanned raw='" . substr($scannedCodeRaw,0,255) . "' normalized='" . $scannedCode . "'");
 
     if (empty($scannedCode)) {
         throw new Exception('QR code data is required');
     }
 
     // Optional: allow scanner to supply section and assigned session directly
-    $provided_section = trim($_POST['section'] ?? $_POST['section_name'] ?? '');
+    // Also accept section/session from JSON body when provided
+    $provided_section = trim($_POST['section'] ?? $_POST['section_name'] ?? $jsonBody['section'] ?? $jsonBody['class'] ?? '');
     $normalizeSession = function ($raw, $allowBoth = false) {
         $v = strtolower(trim((string)$raw));
         if ($v === '') {
@@ -366,7 +390,7 @@ try {
         return null;
     };
 
-    $provided_session_raw = $_POST['assigned_session'] ?? $_POST['session'] ?? '';
+    $provided_session_raw = $_POST['assigned_session'] ?? $_POST['session'] ?? $jsonBody['assigned_session'] ?? $jsonBody['session'] ?? '';
     $provided_session = $normalizeSession($provided_session_raw, false) ?? '';
 
     $teacherIdentifierCandidates = ['Faculty_ID_Number', 'faculty_id_number', 'employee_number', 'employee_id'];
@@ -418,6 +442,7 @@ try {
     };
 
     // Allow teacher QR payloads prefixed with TEACHER: (e.g. TEACHER:EMP-2026-001)
+    // Prefer explicit prefixes when present
     $isTeacher = false;
     $user = null;
     $userType = 'student';
@@ -428,6 +453,12 @@ try {
         $isTeacher = true;
         $userType = 'teacher';
         $scannedCode = $teacherCodeRaw; // normalize for further queries
+    }
+
+    // Support explicit student prefix: STUDENT:<LRN>
+    if (!$isTeacher && stripos($scannedCode, 'STUDENT:') === 0) {
+        $studentCodeRaw = trim(substr($scannedCode, 8));
+        $scannedCode = $studentCodeRaw;
     }
 
     // Determine if this is a student LRN (11-13 digits)
@@ -446,6 +477,7 @@ try {
         } else {
             $user = $student_stmt->fetch(PDO::FETCH_ASSOC);
             $user['lrn'] = $scannedCode; // Ensure LRN is set
+            error_log("mark_attendance: matched student -> id=" . ($user['id'] ?? 'n/a') . " lrn=" . ($user['lrn'] ?? '') . " name=" . trim(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '')));
             $userType = 'student';
         }
     }
@@ -525,6 +557,7 @@ try {
                     $user['class'] = $user['department'] ?? 'Faculty';
                     $isTeacher = true;
                     $userType = 'teacher';
+                    error_log("mark_attendance: matched teacher -> id=" . ($row['id'] ?? 'n/a') . " identifier=" . $resolvedIdentifier . " name=" . trim(($row['first_name'] ?? '') . ' ' . ($row['last_name'] ?? '')));
                     break;
                 }
             }

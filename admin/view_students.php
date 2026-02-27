@@ -1929,14 +1929,22 @@ async function regenerateQRCode() {
     try {
         const response = await fetch('../api/regenerate_qrcode.php', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 student_id: currentQRStudentId
             })
         });
-        
+
+        if (!response.ok) {
+            let text = '';
+            try { text = await response.text(); } catch (e) { }
+            throw new Error(`HTTP ${response.status}: ${text || response.statusText}`);
+        }
+
         const data = await response.json();
         
         if (data.success) {

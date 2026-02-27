@@ -1214,12 +1214,14 @@
             } catch (error) {
                 document.getElementById('scanner-loading').style.display = 'none';
                 document.getElementById('scanner-loading').querySelector('p').textContent = 'Initializing Camera...';
-                
+
+                // Show the actual error message returned from the network/server when available.
                 let errorMessage = 'Network error. Please check your connection and try again.';
-                if (error.message && error.message.includes('Server error')) {
-                    errorMessage = 'Server error. Please contact the administrator.';
+                if (error && error.message) {
+                    // Prefer server-provided message (often includes status and body)
+                    errorMessage = error.message;
                 }
-                
+
                 showError(errorMessage);
             } finally {
                 // Reset processing flag after a delay

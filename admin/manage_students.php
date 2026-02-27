@@ -15,6 +15,7 @@ $additionalCSS = ['../css/manage-students.css?v=' . time()];
 $message = '';
 $messageType = 'info';
 $editMode = false;
+
 $editStudent = null;
 
 /**
@@ -1307,13 +1308,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...'; }
 
         try {
-            const formData = new URLSearchParams();
-            formData.append('student_id', studentId);
+            const payload = JSON.stringify({ student_id: studentId });
 
             const resp = await fetch('../api/delete_student.php', {
                 method: 'POST',
-                headers: { 'Accept': 'application/json' },
-                body: formData
+                credentials: 'same-origin',
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                body: payload
             });
 
             const json = await resp.json();

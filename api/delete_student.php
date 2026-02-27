@@ -5,8 +5,17 @@ require_once __DIR__ . '/../includes/auth_middleware.php';
 
 header('Content-Type: application/json');
 
-// Enforce admin role
-requireRole([ROLE_ADMIN]);
+// Enforce admin role — return JSON on auth failure (avoid redirect)
+if (!isAuthenticated()) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'Authentication required']);
+    exit;
+}
+if (!hasRole([ROLE_ADMIN])) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Admin role required']);
+    exit;
+}
 
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -15,14 +24,33 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Get input data
-$input = json_decode(file_get_contents('php://input'), true);
-$studentId = $input['student_id'] ?? $_POST['student_id'] ?? null;
+// Get input data (accept JSON body or form POST)
+$rawInput = file_get_contents('php://input');
+$input = null;
+if (!empty($rawInput)) {
+    $input = json_decode($rawInput, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        // Malformed JSON — ignore and fallback to POST
+        $input = null;
+    }
+}
 
-if (!$studentId) {
+$studentId = $input['student_id'] ?? $_POST['student_id'] ?? null;
+$studentId = $studentId !== null ? trim((string)$studentId) : null;
+
+if ($studentId === null || $studentId === '') {
+    error_log('delete_student: missing student_id; rawInput=' . substr($rawInput ?? '', 0, 200));
     echo json_encode(['success' => false, 'message' => 'Student ID is required']);
     exit;
 }
+
+// Ensure student id is numeric
+if (!ctype_digit($studentId)) {
+    echo json_encode(['success' => false, 'message' => 'Invalid Student ID']);
+    exit;
+}
+
+$studentId = intval($studentId);
 
 try {
     // Start transaction

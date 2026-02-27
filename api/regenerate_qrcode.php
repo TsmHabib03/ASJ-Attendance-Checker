@@ -11,8 +11,17 @@ require_once __DIR__ . '/../includes/auth_middleware.php';
 
 header('Content-Type: application/json');
 
-// Enforce admin role
-requireRole([ROLE_ADMIN]);
+// Enforce admin role — return JSON if unauthenticated/unauthorized
+if (!isAuthenticated()) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'Authentication required']);
+    exit;
+}
+if (!hasRole([ROLE_ADMIN])) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Admin role required']);
+    exit;
+}
 
 // Check request method
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

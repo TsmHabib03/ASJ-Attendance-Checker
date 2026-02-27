@@ -242,31 +242,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_SERVER['HTTP_X_REQUESTED_W
             $response = ['success' => true, 'message' => 'Section updated successfully!', 'section' => $updatedSection];
             
         } elseif ($action === 'delete') {
-            // Delete section
-            $id = intval($_POST['id'] ?? 0);
-            
-            // Check if section has students
-            $stmt = $pdo->prepare("SELECT section_name FROM sections WHERE id = ?");
+            // Delete section - add safety checks to prevent accidental mass-deletes
+            $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+
+            if ($id <= 0) {
+                throw new Exception('Invalid section id');
+            }
+
+            // Check if section exists and has students
+            $stmt = $pdo->prepare("SELECT section_name FROM sections WHERE id = ? LIMIT 1");
             $stmt->execute([$id]);
-            $section = $stmt->fetch();
-            
+            $section = $stmt->fetch(PDO::FETCH_ASSOC);
+
             if (!$section) {
                 throw new Exception('Section not found');
             }
-            
+
             $count_stmt = $pdo->prepare("SELECT COUNT(*) as count FROM students WHERE section = ? OR class = ?");
             $count_stmt->execute([$section['section_name'], $section['section_name']]);
-            $count = $count_stmt->fetch()['count'];
-            
+            $countRow = $count_stmt->fetch(PDO::FETCH_ASSOC);
+            $count = isset($countRow['count']) ? (int)$countRow['count'] : 0;
+
             if ($count > 0) {
                 throw new Exception("Cannot delete section. It has $count student(s) enrolled. Please reassign students first.");
             }
-            
-            $delete_stmt = $pdo->prepare("DELETE FROM sections WHERE id = ?");
+
+            // Perform a safe delete with LIMIT 1 and verify affected rows
+            $pdo->beginTransaction();
+            $delete_stmt = $pdo->prepare("DELETE FROM sections WHERE id = ? LIMIT 1");
             $delete_stmt->execute([$id]);
-            
+            $affected = $delete_stmt->rowCount();
+
+            if ($affected !== 1) {
+                $pdo->rollBack();
+                throw new Exception('Failed to delete section (unexpected affected rows). Aborting.');
+            }
+
+            $pdo->commit();
+
             logAdminActivity('DELETE_SECTION', "Deleted section: {$section['section_name']}");
-            
+
             $response = ['success' => true, 'message' => 'Section deleted successfully!'];
         }
         
@@ -1473,13 +1488,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sectionForm) {
         sectionForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const submitBtn = document.getElementById('submitBtn');
-            submitBtn.classList.add('btn-loading');
-            submitBtn.disabled = true;
-            
+            if (submitBtn) { submitBtn.classList.add('btn-loading'); submitBtn.disabled = true; }
+
             const formData = new FormData(sectionForm);
-            
+
             try {
                 const response = await fetch('manage_sections.php', {
                     method: 'POST',
@@ -1488,9 +1502,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     body: formData
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success) {
                     showNotification(data.message, 'success');
                     // If server returned the updated/created section, update table row dynamically
@@ -1509,14 +1523,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 } else {
                     showNotification(data.message || 'Failed to save section', 'error');
-                    submitBtn.classList.remove('btn-loading');
-                    submitBtn.disabled = false;
                 }
             } catch (error) {
                 console.error('Form submission error:', error);
                 showNotification('Network error. Please try again.', 'error');
-                submitBtn.classList.remove('btn-loading');
-                submitBtn.disabled = false;
+            } finally {
+                if (submitBtn) { submitBtn.classList.remove('btn-loading'); submitBtn.disabled = false; }
             }
         });
     }

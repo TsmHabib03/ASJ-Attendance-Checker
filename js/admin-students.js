@@ -363,6 +363,7 @@ async function confirmDelete() {
     try {
         const response = await fetch('../api/delete_student.php', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: { 
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -372,8 +373,11 @@ async function confirmDelete() {
             })
         });
 
+        // Handle non-JSON or auth redirects gracefully
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            let bodyText = '';
+            try { bodyText = await response.text(); } catch (e) {}
+            throw new Error(`HTTP error ${response.status}: ${bodyText || response.statusText}`);
         }
 
         const data = await response.json();
