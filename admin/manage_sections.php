@@ -126,8 +126,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_SERVER['HTTP_X_REQUESTED_W
             $stmt->execute($values);
             
             logAdminActivity('ADD_SECTION', "Added section: $section_name");
-            
-            $response = ['success' => true, 'message' => 'Section added successfully!'];
+            // Return created section record so client can update table dynamically
+            $newId = $pdo->lastInsertId();
+            $sel = $pdo->prepare("SELECT s.*, (SELECT COUNT(*) FROM students st WHERE st.section = s.section_name OR st.class = s.section_name) as student_count FROM sections s WHERE s.id = ? LIMIT 1");
+            $sel->execute([$newId]);
+            $newSection = $sel->fetch(PDO::FETCH_ASSOC) ?: null;
+
+            $response = ['success' => true, 'message' => 'Section added successfully!', 'section' => $newSection];
             
         } elseif ($action === 'edit') {
             // Edit section
@@ -159,6 +164,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_SERVER['HTTP_X_REQUESTED_W
                 throw new Exception('Section not found');
             }
             
+            // Prevent renaming to an existing section name (avoid duplicate section entries)
+            $dupStmt = $pdo->prepare("SELECT id FROM sections WHERE section_name = ? AND id != ?");
+            $dupStmt->execute([$section_name, $id]);
+            if ($dupStmt->rowCount() > 0) {
+                throw new Exception('Another section with this name already exists. Choose a different name or merge sections.');
+            }
+
             $pdo->beginTransaction();
             // Update section (do not change is_active here)
             $shift = trim($_POST['shift'] ?? '');
@@ -222,8 +234,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_SERVER['HTTP_X_REQUESTED_W
             $pdo->commit();
             
             logAdminActivity('EDIT_SECTION', "Updated section: $section_name");
-            
-            $response = ['success' => true, 'message' => 'Section updated successfully!'];
+            // Return updated section for client-side dynamic update
+            $sel = $pdo->prepare("SELECT s.*, (SELECT COUNT(*) FROM students st WHERE st.section = s.section_name OR st.class = s.section_name) as student_count FROM sections s WHERE s.id = ? LIMIT 1");
+            $sel->execute([$id]);
+            $updatedSection = $sel->fetch(PDO::FETCH_ASSOC) ?: null;
+
+            $response = ['success' => true, 'message' => 'Section updated successfully!', 'section' => $updatedSection];
             
         } elseif ($action === 'delete') {
             // Delete section
@@ -734,8 +750,32 @@ include 'includes/header_modern.php';
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <?php if (!empty($section['shift'])): ?>
-                                        <span class="shift-badge shift-<?php echo strtolower($section['shift']); ?>"><?php echo htmlspecialchars(ucfirst($section['shift'])); ?></span>
+                                    <?php
+                                        $shiftRaw = $section['shift'] ?? '';
+                                        $shiftLabel = '';
+                                        $shiftClass = '';
+                                        // If shift is empty, fall back to session field (legacy/alternate column)
+                                        if (empty($shiftRaw) && !empty($section['session'])) {
+                                            $shiftRaw = $section['session'];
+                                        }
+
+                                        if (!empty($shiftRaw)) {
+                                            $sr = strtolower(trim((string)$shiftRaw));
+                                            if (strpos($sr, 'am') !== false || strpos($sr, 'morning') !== false) {
+                                                $shiftLabel = 'AM';
+                                                $shiftClass = 'am';
+                                            } elseif (strpos($sr, 'pm') !== false || strpos($sr, 'afternoon') !== false) {
+                                                $shiftLabel = 'PM';
+                                                $shiftClass = 'pm';
+                                            } else {
+                                                // Fallback: show raw value
+                                                $shiftLabel = ucfirst($shiftRaw);
+                                                $shiftClass = preg_replace('/[^a-z0-9]+/i', '-', $sr);
+                                            }
+                                        }
+                                    ?>
+                                    <?php if ($shiftLabel !== ''): ?>
+                                        <span class="shift-badge shift-<?php echo htmlspecialchars($shiftClass); ?>"><?php echo htmlspecialchars($shiftLabel); ?></span>
                                     <?php else: ?>
                                         <span class="text-muted-custom">-</span>
                                     <?php endif; ?>
@@ -1170,15 +1210,18 @@ function ensureScheduleControls() {
 
     // Toggle handler: when uses_custom_schedule is checked enable time inputs
     const toggle = document.getElementById('uses_custom_schedule');
-    toggle.addEventListener('change', function() {
-        const enabled = this.checked;
-        ['am_start_time','am_late_threshold','am_end_time','pm_start_time','pm_late_threshold','pm_end_time'].forEach(id => {
-            const el = document.getElementById(id);
-            if (!el) return;
-            el.disabled = !enabled;
-            el.closest('.form-row')?.classList.toggle('muted', !enabled);
+    if (toggle) {
+        toggle.addEventListener('change', function() {
+            const enabled = this.checked;
+            ['am_start_time','am_late_threshold','am_end_time','pm_start_time','pm_late_threshold','pm_end_time'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.disabled = !enabled;
+                const rowEl = el.closest && el.closest('.form-row');
+                if (rowEl && rowEl.classList) rowEl.classList.toggle('muted', !enabled);
+            });
         });
-    });
+    }
 
 }
 
@@ -1209,6 +1252,21 @@ function editSection(section) {
     document.getElementById('school_year').value = section.school_year || '';
     if (document.getElementById('shift')) document.getElementById('shift').value = section.shift || '';
 
+    // Normalize shift values from various stored formats to the form select values (AM/PM)
+    try {
+        const shiftEl = document.getElementById('shift');
+        if (shiftEl) {
+            const raw = (section.shift || section.session || '').toLowerCase();
+            if (raw.indexOf('am') !== -1 || raw.indexOf('morning') !== -1) {
+                shiftEl.value = 'AM';
+            } else if (raw.indexOf('pm') !== -1 || raw.indexOf('afternoon') !== -1) {
+                shiftEl.value = 'PM';
+            } else {
+                shiftEl.value = section.shift || section.session || '';
+            }
+        }
+    } catch(e) {}
+
     // set session/schedule values if present
     try { document.getElementById('session').value = section.session || ''; } catch(e) {}
     try { document.getElementById('am_start_time').value = section.am_start_time || ''; } catch(e) {}
@@ -1229,8 +1287,114 @@ function editSection(section) {
     } catch(e) {}
     
     SectionManager.currentSection = section;
+    // Ensure submit button is enabled when opening edit modal
+    try {
+        const submitBtn = document.getElementById('submitBtn');
+        if (submitBtn) { submitBtn.classList.remove('btn-loading'); submitBtn.disabled = false; }
+    } catch(e) {}
     openModal('sectionModal');
 }
+
+// Compute shift badge HTML from section object
+function computeShiftBadge(section) {
+    let raw = (section.shift || section.session || '') + '';
+    raw = raw.trim();
+    if (!raw) return '<span class="text-muted-custom">-</span>';
+    const sr = raw.toLowerCase();
+    let shiftLabel = '';
+    let shiftClass = '';
+    if (sr.indexOf('am') !== -1 || sr.indexOf('morning') !== -1) {
+        shiftLabel = 'AM'; shiftClass = 'am';
+    } else if (sr.indexOf('pm') !== -1 || sr.indexOf('afternoon') !== -1) {
+        shiftLabel = 'PM'; shiftClass = 'pm';
+    } else {
+        shiftLabel = raw.charAt(0).toUpperCase() + raw.slice(1);
+        shiftClass = sr.replace(/[^a-z0-9]+/ig, '-');
+    }
+    return `<span class="shift-badge shift-${shiftClass}">${shiftLabel}</span>`;
+}
+
+// Update existing table row or insert a new one for the given section
+function updateOrInsertSectionRow(section) {
+    if (!section || !section.id) return;
+    const tbody = document.getElementById('sectionsTableBody');
+    const tr = document.querySelector(`tr[data-section-id="${section.id}"]`);
+    // Build safe HTML snippets for cells we update
+    const sectionNameHtml = `
+        <div class="table-cell-content">
+            <div class="section-name-wrapper">
+                <div class="section-icon"><i class="fas fa-bookmark"></i></div>
+                <strong class="section-name">${escapeHtml(section.section_name || '')}</strong>
+            </div>
+        </div>`;
+    const gradeHtml = section.grade_level ? `<span class="grade-badge grade-badge-enhanced"><i class="fas fa-graduation-cap"></i><span>Grade ${escapeHtml(section.grade_level)}</span></span>` : '<span class="text-muted-custom">-</span>';
+    const shiftHtml = computeShiftBadge(section);
+    const adviserHtml = section.adviser ? `<div class="adviser-info"><div class="adviser-avatar">${escapeHtml((section.adviser || '').charAt(0).toUpperCase())}</div><span>${escapeHtml(section.adviser)}</span></div>` : '<span class="text-muted-custom">No Adviser</span>';
+    const schoolYearHtml = section.school_year ? `<span class="school-year-badge"><i class="fas fa-calendar"></i>${escapeHtml(section.school_year)}</span>` : '<span class="text-muted-custom">-</span>';
+    const studentsHtml = `<span class="badge badge-info badge-enhanced"><i class="fas fa-users"></i><span class="badge-text">${Number(section.student_count || 0)} student${Number(section.student_count || 0) !== 1 ? 's' : ''}</span></span>`;
+    const status = (section.status || (section.is_active == 1 ? 'active' : 'inactive'));
+    const statusClass = status.toLowerCase();
+    const statusIcon = status === 'active' ? 'check-circle' : 'times-circle';
+    const statusHtml = `<span class="status-badge status-badge-enhanced status-${statusClass}"><i class="fas fa-${statusIcon} status-icon"></i><span>${escapeHtml((status || '').charAt(0).toUpperCase() + (status || '').slice(1))}</span></span>`;
+
+    if (tr) {
+        const tds = tr.querySelectorAll('td');
+        if (tds.length >= 6) {
+            tds[0].innerHTML = sectionNameHtml;
+            tds[1].innerHTML = gradeHtml;
+            tds[2].innerHTML = shiftHtml;
+            tds[3].innerHTML = adviserHtml;
+            tds[4].innerHTML = schoolYearHtml;
+            tds[5].innerHTML = studentsHtml;
+            tds[6].innerHTML = statusHtml;
+        }
+        // Update action button data-section and delete metadata
+        const editBtn = tr.querySelector('button[data-action="edit"]');
+        if (editBtn) editBtn.dataset.section = JSON.stringify(section);
+        const delBtn = tr.querySelector('button[data-action="delete"]');
+        if (delBtn) {
+            delBtn.dataset.name = section.section_name || '';
+            delBtn.dataset.count = section.student_count || 0;
+        }
+    } else {
+        // Insert new row at top
+        const row = document.createElement('tr');
+        row.className = 'table-row-animated';
+        row.setAttribute('data-section-id', section.id);
+        row.setAttribute('data-status', status);
+        row.setAttribute('data-students', section.student_count || 0);
+        row.innerHTML = `
+            <td class="td-primary">${sectionNameHtml}</td>
+            <td>${gradeHtml}</td>
+            <td>${shiftHtml}</td>
+            <td class="td-adviser">${adviserHtml}</td>
+            <td>${schoolYearHtml}</td>
+            <td class="td-centered">${studentsHtml}</td>
+            <td class="td-centered">${statusHtml}</td>
+            <td class="td-actions">
+                <div class="action-buttons action-buttons-enhanced">
+                    <button class="btn-action btn-action-edit" data-action="edit" title="Edit Section"><i class="fas fa-edit"></i><span class="btn-tooltip">Edit</span></button>
+                    <button class="btn-action btn-action-delete" data-action="delete" data-id="${escapeAttr(section.id)}" data-name="${escapeAttr(section.section_name || '')}" data-count="${escapeAttr(section.student_count || 0)}" title="Delete Section"><i class="fas fa-trash"></i><span class="btn-tooltip">Delete</span></button>
+                </div>
+            </td>`;
+        tbody.insertBefore(row, tbody.firstChild);
+        // Attach the JSON data to the edit button via DOM dataset (avoids HTML-escaping issues)
+        try {
+            const newEditBtn = row.querySelector('button[data-action="edit"]');
+            if (newEditBtn) newEditBtn.dataset.section = JSON.stringify(section);
+        } catch (e) {}
+    }
+}
+
+// Simple helpers to escape HTML in inserted content
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/[&<>\"']/g, function (s) {
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s];
+    });
+}
+
+function escapeAttr(s) { return escapeHtml(s); }
 
 // Delete Section
 function deleteSection(id, name, studentCount) {
@@ -1329,8 +1493,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (data.success) {
                     showNotification(data.message, 'success');
-                    closeModal('sectionModal');
-                    setTimeout(() => window.location.reload(), 1000);
+                    // If server returned the updated/created section, update table row dynamically
+                    if (data.section) {
+                        try {
+                            updateOrInsertSectionRow(data.section);
+                        } catch (e) {
+                            console.error('Update row error:', e);
+                            // Fallback to full reload
+                            setTimeout(() => window.location.reload(), 800);
+                        }
+                        closeModal('sectionModal');
+                    } else {
+                        closeModal('sectionModal');
+                        setTimeout(() => window.location.reload(), 1000);
+                    }
                 } else {
                     showNotification(data.message || 'Failed to save section', 'error');
                     submitBtn.classList.remove('btn-loading');
@@ -1453,7 +1629,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function applyFilters() {
-        const statusFilter = document.querySelector('input[name="statusFilter"]:checked')?.value || 'all';
+        const statusNode = document.querySelector('input[name="statusFilter"]:checked');
+        const statusFilter = statusNode ? statusNode.value : 'all';
         const rows = document.querySelectorAll('#sectionsTableBody tr');
         let visibleCount = 0;
         

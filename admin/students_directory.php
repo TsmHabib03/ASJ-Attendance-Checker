@@ -94,21 +94,36 @@ if ($attendanceIdField !== null) {
     $lastSub = "NULL as last_attendance";
 }
 
-// Build JOIN to sections depending on whether students store section_id or section name
+// Build section selection depending on whether students store section_id or section name
 if ($hasSectionId) {
     $join = "LEFT JOIN sections sec ON s.section_id = sec.id";
+    $sectionSelect = "sec.section_name, sec.grade_level";
+    $orderSection = "sec.grade_level, sec.section_name";
 } elseif ($hasSectionName) {
-    $join = "LEFT JOIN sections sec ON s.section = sec.section_name";
+    // Use subqueries to safely resolve section fields by name and avoid duplicate rows
+    $join = ""; // no join to avoid multiplicative matches when multiple sections share names
+    $sectionSelect = "(SELECT ss.section_name FROM sections ss WHERE ss.section_name = s.section LIMIT 1) AS section_name, (SELECT ss.grade_level FROM sections ss WHERE ss.section_name = s.section LIMIT 1) AS grade_level";
+    $orderSection = "(SELECT ss.grade_level FROM sections ss WHERE ss.section_name = s.section LIMIT 1), (SELECT ss.section_name FROM sections ss WHERE ss.section_name = s.section LIMIT 1)";
 } else {
-    $join = "LEFT JOIN sections sec ON 1=0"; // no section info available
+    $join = "";
+    $sectionSelect = "NULL AS section_name, '' AS grade_level";
+    $orderSection = "''";
 }
 
-$query = "SELECT s.*, sec.section_name, sec.grade_level, {$monthlySub}, {$lastSub} FROM students s {$join} WHERE 1=1";
+$query = "SELECT s.*, {$sectionSelect}, {$monthlySub}, {$lastSub} FROM students s" . ($join ? " {$join} " : "") . " WHERE 1=1";
 
-// Grade level filter uses sections table
+// Grade level filter uses sections table (handle subquery case)
 if ($filterGradeLevel) {
-    $query .= " AND sec.grade_level = ?";
-    $params[] = $filterGradeLevel;
+    if ($hasSectionId) {
+        $query .= " AND sec.grade_level = ?";
+        $params[] = $filterGradeLevel;
+    } elseif ($hasSectionName) {
+        $query .= " AND (SELECT ss.grade_level FROM sections ss WHERE ss.section_name = s.section LIMIT 1) = ?";
+        $params[] = $filterGradeLevel;
+    } else {
+        // no section info available -> no rows match
+        $query .= " AND 1=0";
+    }
 }
 
 // Section filter: if students table has section_id, use it; otherwise resolve id->name
@@ -160,7 +175,7 @@ if ($searchTerm) {
     $query .= " AND (" . implode(' OR ', $searchParts) . ")";
 }
 
-$query .= " ORDER BY sec.grade_level, sec.section_name, s.last_name, s.first_name";
+$query .= " ORDER BY {$orderSection}, s.last_name, s.first_name";
 
 try {
     $stmt = $pdo->prepare($query);

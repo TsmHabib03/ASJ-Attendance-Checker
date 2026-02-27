@@ -1127,8 +1127,8 @@ include 'includes/header_modern.php';
                         ⚠️ This action cannot be undone and will delete all attendance records.
                     </p>
                     <div class="modal-actions" style="gap: var(--space-3);">
-                        <form method="POST" action="../api/delete_student.php" style="display: inline-block;">
-                            <input type="hidden" name="student_id" value="<?php echo $editStudent['id']; ?>">
+                        <form id="deleteStudentForm" method="POST" action="../api/delete_student.php" style="display: inline-block;">
+                            <input type="hidden" name="student_id" id="delete_student_id" value="<?php echo $editStudent['id']; ?>">
                             <button type="submit" class="btn btn-danger" style="min-width: 160px;">
                                 <i class="fas fa-trash"></i>
                                 <span>Yes, Delete</span>
@@ -1290,6 +1290,51 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+});
+</script>
+
+<script>
+// Intercept delete form to call API via fetch and show friendly modal/redirect
+document.addEventListener('DOMContentLoaded', function() {
+    const delForm = document.getElementById('deleteStudentForm');
+    if (!delForm) return;
+
+    delForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const studentId = document.getElementById('delete_student_id').value;
+        // Visual feedback: disable submit button
+        const btn = delForm.querySelector('button[type="submit"]');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...'; }
+
+        try {
+            const formData = new URLSearchParams();
+            formData.append('student_id', studentId);
+
+            const resp = await fetch('../api/delete_student.php', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: formData
+            });
+
+            const json = await resp.json();
+            if (json && json.success) {
+                // Close modal if present
+                const modal = document.getElementById('delete-modal');
+                if (modal) modal.style.display = 'none';
+
+                // Show a short success alert then redirect to student list
+                alert(json.message || 'Student deleted successfully');
+                window.location.href = 'view_students.php';
+            } else {
+                alert(json.message || 'Failed to delete student');
+                if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-trash"></i> <span>Yes, Delete</span>'; }
+            }
+        } catch (err) {
+            console.error(err);
+            alert('An error occurred while deleting the student. Check logs.');
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-trash"></i> <span>Yes, Delete</span>'; }
+        }
+    });
 });
 </script>
 

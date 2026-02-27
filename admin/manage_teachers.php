@@ -186,13 +186,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             );
                             $stmt->execute($insertValues);
 
-                                // Generate a simple employee_id using the new row id
-                                $newTeacherId = $pdo->lastInsertId();
-                                if ($newTeacherId && $teacherHasEmployeeId) {
-                                    $generatedEmpId = 'EMP-' . str_pad($newTeacherId, 6, '0', STR_PAD_LEFT);
-                                    $upd = $pdo->prepare("UPDATE teachers SET employee_id = ? WHERE id = ?");
-                                    $upd->execute([$generatedEmpId, $newTeacherId]);
+                            // Get the new teacher id
+                            $newTeacherId = $pdo->lastInsertId();
+
+                            // Generate a simple employee_id using the new row id
+                            if ($newTeacherId && $teacherHasEmployeeId) {
+                                $generatedEmpId = 'EMP-' . str_pad($newTeacherId, 6, '0', STR_PAD_LEFT);
+                                $upd = $pdo->prepare("UPDATE teachers SET employee_id = ? WHERE id = ?");
+                                $upd->execute([$generatedEmpId, $newTeacherId]);
+                            }
+
+                            // If QR generation failed earlier, try again using the raw employee number as identifier
+                            if (empty($qrCodePath)) {
+                                try {
+                                    $regenPath = generateQRCode($employeeNumber, 'teacher');
+                                    if ($regenPath) {
+                                        $upd = $pdo->prepare("UPDATE teachers SET qr_code = ? WHERE id = ?");
+                                        $upd->execute([$regenPath, $newTeacherId]);
+                                        $qrCodePath = $regenPath;
+                                    } else {
+                                        error_log("manage_teachers: QR regeneration failed for teacher {$employeeNumber}");
+                                    }
+                                } catch (Exception $e) {
+                                    error_log("manage_teachers: QR regeneration exception: " . $e->getMessage());
                                 }
+                            }
 
                             logAdminActivity('ADD_TEACHER', "Added teacher: {$firstName} {$lastName} (Num: {$employeeNumber})");
 
@@ -200,7 +218,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $messageType = "success";
 
                             // Redirect to edit page for the newly created teacher so QR is visible
-                            $newTeacherId = $pdo->lastInsertId();
                             if ($newTeacherId) {
                                 header('Location: manage_teachers.php?id=' . intval($newTeacherId));
                                 exit;
@@ -389,6 +406,46 @@ if ($editMode && is_array($editTeacher)) {
         $editTeacherIdentifierValue = (string) $editTeacher['employee_id'];
     } elseif (isset($editTeacher['Faculty_ID_Number'])) {
         $editTeacherIdentifierValue = (string) $editTeacher['Faculty_ID_Number'];
+    }
+}
+
+// If editing, ensure a usable QR code file exists; try to generate/update it if missing
+if ($editMode && is_array($editTeacher)) {
+    $currentQr = $editTeacher['qr_code'] ?? '';
+    $qrFilesystemPath = '';
+    if (!empty($currentQr)) {
+        $qrFilesystemPath = __DIR__ . '/../' . $currentQr;
+    }
+
+    if (empty($currentQr) || !file_exists($qrFilesystemPath)) {
+        // Resolve identifier to use in QR payload (match mark_attendance expectations)
+        $resolvedId = '';
+        if ($teacherIdentifierColumn !== null && !empty($editTeacher[$teacherIdentifierColumn])) {
+            $resolvedId = (string)$editTeacher[$teacherIdentifierColumn];
+        } elseif (!empty($editTeacher['employee_number'])) {
+            $resolvedId = (string)$editTeacher['employee_number'];
+        } elseif (!empty($editTeacher['employee_id'])) {
+            $resolvedId = (string)$editTeacher['employee_id'];
+        } elseif (!empty($editTeacher['Faculty_ID_Number'])) {
+            $resolvedId = (string)$editTeacher['Faculty_ID_Number'];
+        }
+
+        if ($resolvedId !== '') {
+            $qrPayload = 'TEACHER:' . $resolvedId;
+            try {
+                $generated = generateQRCode($qrPayload, 'teacher');
+                if ($generated) {
+                    // Persist generated path to DB and update local variable for rendering
+                    $upd = $pdo->prepare("UPDATE teachers SET qr_code = ? WHERE id = ?");
+                    $upd->execute([$generated, $editTeacher['id']]);
+                    $editTeacher['qr_code'] = $generated;
+                } else {
+                    error_log("manage_teachers: QR generation returned false for teacher id " . ($editTeacher['id'] ?? 'unknown'));
+                }
+            } catch (Exception $e) {
+                error_log("manage_teachers: Exception while generating QR for teacher: " . $e->getMessage());
+            }
+        }
     }
 }
 
