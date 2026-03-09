@@ -5,3 +5,174 @@
 [2026-02-27 21:13:01] REQUEST method=POST student_id=78 rawInput={"student_id":"78"} POST=[]
 [2026-02-27 21:13:01] STUDENT_LOOKUP id=78 found=1
 [2026-02-27 21:13:02] QR_GENERATION id=78 result=uploads/qrcodes/student_78.png
+[2026-02-27 22:05:14] REQUEST method=POST student_id=52 rawInput={"student_id":"52"} POST=[]
+[2026-02-27 22:05:14] STUDENT_LOOKUP id=52 found=1
+[2026-02-27 22:05:15] QR_GENERATION id=52 result=uploads/qrcodes/student_52.png
+[2026-02-27 22:06:35] REQUEST method=POST student_id=17 rawInput={"student_id":"17"} POST=[]
+[2026-02-27 22:06:35] STUDENT_LOOKUP id=17 found=1
+[2026-02-27 22:06:36] QR_GENERATION id=17 result=uploads/qrcodes/student_17.png
+[2026-02-27 23:55:14] REQUEST method=POST student_id=80 rawInput={"student_id":"80"} POST=[]
+[2026-02-27 23:55:14] STUDENT_LOOKUP id=80 found=1
+[2026-02-27 23:55:15] QR_GENERATION id=80 result=uploads/qrcodes/student_80.png
+[2026-02-28 08:09:16] REQUEST method=POST student_id=93 rawInput={"student_id":"93"} POST=[]
+[2026-02-28 08:09:16] STUDENT_LOOKUP id=93 found=1
+[2026-02-28 08:09:17] QR_GENERATION id=93 result=uploads/qrcodes/student_93.png
+[2026-02-28 08:09:26] REQUEST method=POST student_id=105 rawInput={"student_id":"105"} POST=[]
+[2026-02-28 08:09:26] STUDENT_LOOKUP id=105 found=1
+[2026-02-28 08:09:27] QR_GENERATION id=105 result=uploads/qrcodes/student_105.png
+[2026-02-28 08:53:21] REQUEST method=POST student_id=583 rawInput={"student_id":"583"} POST=[]
+[2026-02-28 08:53:21] STUDENT_LOOKUP id=583 found=1
+[2026-02-28 08:53:23] QR_GENERATION id=583 result=uploads/qrcodes/student_583.png
+[2026-02-28 08:53:31] REQUEST method=POST student_id=81 rawInput={"student_id":"81"} POST=[]
+[2026-02-28 08:53:31] STUDENT_LOOKUP id=81 found=1
+[2026-02-28 08:53:32] QR_GENERATION id=81 result=uploads/qrcodes/student_81.png
+[2026-02-28 08:54:13] REQUEST method=POST student_id=583 rawInput={"student_id":"583"} POST=[]
+[2026-02-28 08:54:13] STUDENT_LOOKUP id=583 found=1
+[2026-02-28 08:54:14] QR_GENERATION id=583 result=uploads/qrcodes/student_583.png
+[2026-02-28 08:54:22] REQUEST method=POST student_id=81 rawInput={"student_id":"81"} POST=[]
+[2026-02-28 08:54:22] STUDENT_LOOKUP id=81 found=1
+[2026-02-28 08:54:23] QR_GENERATION id=81 result=uploads/qrcodes/student_81.png
+[2026-02-28 08:54:29] REQUEST method=POST student_id=577 rawInput={"student_id":"577"} POST=[]
+[2026-02-28 08:54:29] STUDENT_LOOKUP id=577 found=1
+[2026-02-28 08:54:30] QR_GENERATION id=577 result=uploads/qrcodes/student_577.png
+[2026-02-28 08:54:44] REQUEST method=POST student_id=578 rawInput={"student_id":"578"} POST=[]
+[2026-02-28 08:54:44] STUDENT_LOOKUP id=578 found=1
+[2026-02-28 08:54:45] QR_GENERATION id=578 result=uploads/qrcodes/student_578.png
+[2026-02-28 08:54:53] REQUEST method=POST student_id=584 rawInput={"student_id":"584"} POST=[]
+[2026-02-28 08:54:53] STUDENT_LOOKUP id=584 found=1
+[2026-02-28 08:54:54] QR_GENERATION id=584 result=uploads/qrcodes/student_584.png
+[2026-02-28 08:55:02] REQUEST method=POST student_id=580 rawInput={"student_id":"580"} POST=[]
+[2026-02-28 08:55:02] STUDENT_LOOKUP id=580 found=1
+[2026-02-28 08:55:03] QR_GENERATION id=580 result=uploads/qrcodes/student_580.png
+[2026-02-28 08:55:15] REQUEST method=POST student_id=88 rawInput={"student_id":"88"} POST=[]
+[2026-02-28 08:55:15] STUDENT_LOOKUP id=88 found=1
+[2026-02-28 08:55:16] QR_GENERATION id=88 result=uploads/qrcodes/student_88.png
+[2026-02-28 08:55:23] REQUEST method=POST student_id=581 rawInput={"student_id":"581"} POST=[]
+[2026-02-28 08:55:23] STUDENT_LOOKUP id=581 found=1
+[2026-02-28 08:55:24] QR_GENERATION id=581 result=uploads/qrcodes/student_581.png
+[2026-02-28 08:55:30] REQUEST method=POST student_id=82 rawInput={"student_id":"82"} POST=[]
+[2026-02-28 08:55:30] STUDENT_LOOKUP id=82 found=1
+[2026-02-28 08:55:31] QR_GENERATION id=82 result=uploads/qrcodes/student_82.png
+[2026-02-28 08:55:38] REQUEST method=POST student_id=586 rawInput={"student_id":"586"} POST=[]
+[2026-02-28 08:55:38] STUDENT_LOOKUP id=586 found=1
+[2026-02-28 08:55:39] QR_GENERATION id=586 result=uploads/qrcodes/student_586.png
+[2026-02-28 08:55:45] REQUEST method=POST student_id=564 rawInput={"student_id":"564"} POST=[]
+[2026-02-28 08:55:45] STUDENT_LOOKUP id=564 found=1
+[2026-02-28 08:55:46] QR_GENERATION id=564 result=uploads/qrcodes/student_564.png
+[2026-02-28 08:55:57] REQUEST method=POST student_id=564 rawInput={"student_id":"564"} POST=[]
+[2026-02-28 08:55:57] STUDENT_LOOKUP id=564 found=1
+[2026-02-28 08:55:58] QR_GENERATION id=564 result=uploads/qrcodes/student_564.png
+[2026-02-28 08:56:04] REQUEST method=POST student_id=106 rawInput={"student_id":"106"} POST=[]
+[2026-02-28 08:56:04] STUDENT_LOOKUP id=106 found=1
+[2026-02-28 08:56:05] QR_GENERATION id=106 result=uploads/qrcodes/student_106.png
+[2026-02-28 08:56:11] REQUEST method=POST student_id=579 rawInput={"student_id":"579"} POST=[]
+[2026-02-28 08:56:11] STUDENT_LOOKUP id=579 found=1
+[2026-02-28 08:56:12] QR_GENERATION id=579 result=uploads/qrcodes/student_579.png
+[2026-02-28 08:56:20] REQUEST method=POST student_id=91 rawInput={"student_id":"91"} POST=[]
+[2026-02-28 08:56:20] STUDENT_LOOKUP id=91 found=1
+[2026-02-28 08:56:21] QR_GENERATION id=91 result=uploads/qrcodes/student_91.png
+[2026-02-28 08:56:31] REQUEST method=POST student_id=86 rawInput={"student_id":"86"} POST=[]
+[2026-02-28 08:56:31] STUDENT_LOOKUP id=86 found=1
+[2026-02-28 08:56:32] QR_GENERATION id=86 result=uploads/qrcodes/student_86.png
+[2026-02-28 08:56:40] REQUEST method=POST student_id=567 rawInput={"student_id":"567"} POST=[]
+[2026-02-28 08:56:40] STUDENT_LOOKUP id=567 found=1
+[2026-02-28 08:56:41] QR_GENERATION id=567 result=uploads/qrcodes/student_567.png
+[2026-02-28 08:56:57] REQUEST method=POST student_id=566 rawInput={"student_id":"566"} POST=[]
+[2026-02-28 08:56:57] STUDENT_LOOKUP id=566 found=1
+[2026-02-28 08:56:58] QR_GENERATION id=566 result=uploads/qrcodes/student_566.png
+[2026-02-28 08:57:09] REQUEST method=POST student_id=98 rawInput={"student_id":"98"} POST=[]
+[2026-02-28 08:57:09] STUDENT_LOOKUP id=98 found=1
+[2026-02-28 08:57:10] QR_GENERATION id=98 result=uploads/qrcodes/student_98.png
+[2026-02-28 08:57:17] REQUEST method=POST student_id=92 rawInput={"student_id":"92"} POST=[]
+[2026-02-28 08:57:17] STUDENT_LOOKUP id=92 found=1
+[2026-02-28 08:57:18] QR_GENERATION id=92 result=uploads/qrcodes/student_92.png
+[2026-02-28 08:57:25] REQUEST method=POST student_id=568 rawInput={"student_id":"568"} POST=[]
+[2026-02-28 08:57:25] STUDENT_LOOKUP id=568 found=1
+[2026-02-28 08:57:26] QR_GENERATION id=568 result=uploads/qrcodes/student_568.png
+[2026-02-28 08:57:38] REQUEST method=POST student_id=563 rawInput={"student_id":"563"} POST=[]
+[2026-02-28 08:57:38] STUDENT_LOOKUP id=563 found=1
+[2026-02-28 08:57:40] QR_GENERATION id=563 result=uploads/qrcodes/student_563.png
+[2026-02-28 08:57:46] REQUEST method=POST student_id=90 rawInput={"student_id":"90"} POST=[]
+[2026-02-28 08:57:46] STUDENT_LOOKUP id=90 found=1
+[2026-02-28 08:57:47] QR_GENERATION id=90 result=uploads/qrcodes/student_90.png
+[2026-02-28 08:57:54] REQUEST method=POST student_id=103 rawInput={"student_id":"103"} POST=[]
+[2026-02-28 08:57:54] STUDENT_LOOKUP id=103 found=1
+[2026-02-28 08:57:56] QR_GENERATION id=103 result=uploads/qrcodes/student_103.png
+[2026-02-28 08:58:13] REQUEST method=POST student_id=89 rawInput={"student_id":"89"} POST=[]
+[2026-02-28 08:58:13] STUDENT_LOOKUP id=89 found=1
+[2026-02-28 08:58:14] QR_GENERATION id=89 result=uploads/qrcodes/student_89.png
+[2026-02-28 08:58:20] REQUEST method=POST student_id=94 rawInput={"student_id":"94"} POST=[]
+[2026-02-28 08:58:20] STUDENT_LOOKUP id=94 found=1
+[2026-02-28 08:58:21] QR_GENERATION id=94 result=uploads/qrcodes/student_94.png
+[2026-02-28 08:58:36] REQUEST method=POST student_id=565 rawInput={"student_id":"565"} POST=[]
+[2026-02-28 08:58:36] STUDENT_LOOKUP id=565 found=1
+[2026-02-28 08:58:37] QR_GENERATION id=565 result=uploads/qrcodes/student_565.png
+[2026-02-28 08:58:50] REQUEST method=POST student_id=102 rawInput={"student_id":"102"} POST=[]
+[2026-02-28 08:58:50] STUDENT_LOOKUP id=102 found=1
+[2026-02-28 08:58:51] QR_GENERATION id=102 result=uploads/qrcodes/student_102.png
+[2026-02-28 08:59:02] REQUEST method=POST student_id=575 rawInput={"student_id":"575"} POST=[]
+[2026-02-28 08:59:02] STUDENT_LOOKUP id=575 found=1
+[2026-02-28 08:59:03] QR_GENERATION id=575 result=uploads/qrcodes/student_575.png
+[2026-02-28 08:59:13] REQUEST method=POST student_id=109 rawInput={"student_id":"109"} POST=[]
+[2026-02-28 08:59:13] STUDENT_LOOKUP id=109 found=1
+[2026-02-28 08:59:14] QR_GENERATION id=109 result=uploads/qrcodes/student_109.png
+[2026-02-28 08:59:21] REQUEST method=POST student_id=87 rawInput={"student_id":"87"} POST=[]
+[2026-02-28 08:59:21] STUDENT_LOOKUP id=87 found=1
+[2026-02-28 08:59:22] QR_GENERATION id=87 result=uploads/qrcodes/student_87.png
+[2026-02-28 08:59:38] REQUEST method=POST student_id=107 rawInput={"student_id":"107"} POST=[]
+[2026-02-28 08:59:38] STUDENT_LOOKUP id=107 found=1
+[2026-02-28 08:59:39] QR_GENERATION id=107 result=uploads/qrcodes/student_107.png
+[2026-02-28 08:59:45] REQUEST method=POST student_id=84 rawInput={"student_id":"84"} POST=[]
+[2026-02-28 08:59:45] STUDENT_LOOKUP id=84 found=1
+[2026-02-28 08:59:46] QR_GENERATION id=84 result=uploads/qrcodes/student_84.png
+[2026-02-28 08:59:52] REQUEST method=POST student_id=108 rawInput={"student_id":"108"} POST=[]
+[2026-02-28 08:59:52] STUDENT_LOOKUP id=108 found=1
+[2026-02-28 08:59:53] QR_GENERATION id=108 result=uploads/qrcodes/student_108.png
+[2026-02-28 08:59:59] REQUEST method=POST student_id=100 rawInput={"student_id":"100"} POST=[]
+[2026-02-28 08:59:59] STUDENT_LOOKUP id=100 found=1
+[2026-02-28 09:00:00] QR_GENERATION id=100 result=uploads/qrcodes/student_100.png
+[2026-02-28 09:00:06] REQUEST method=POST student_id=582 rawInput={"student_id":"582"} POST=[]
+[2026-02-28 09:00:06] STUDENT_LOOKUP id=582 found=1
+[2026-02-28 09:00:07] QR_GENERATION id=582 result=uploads/qrcodes/student_582.png
+[2026-02-28 09:00:14] REQUEST method=POST student_id=590 rawInput={"student_id":"590"} POST=[]
+[2026-02-28 09:00:14] STUDENT_LOOKUP id=590 found=1
+[2026-02-28 09:00:15] QR_GENERATION id=590 result=uploads/qrcodes/student_590.png
+[2026-02-28 09:00:22] REQUEST method=POST student_id=572 rawInput={"student_id":"572"} POST=[]
+[2026-02-28 09:00:22] STUDENT_LOOKUP id=572 found=1
+[2026-02-28 09:00:23] QR_GENERATION id=572 result=uploads/qrcodes/student_572.png
+[2026-02-28 09:00:30] REQUEST method=POST student_id=99 rawInput={"student_id":"99"} POST=[]
+[2026-02-28 09:00:30] STUDENT_LOOKUP id=99 found=1
+[2026-02-28 09:00:31] QR_GENERATION id=99 result=uploads/qrcodes/student_99.png
+[2026-02-28 09:00:42] REQUEST method=POST student_id=83 rawInput={"student_id":"83"} POST=[]
+[2026-02-28 09:00:42] STUDENT_LOOKUP id=83 found=1
+[2026-02-28 09:00:43] QR_GENERATION id=83 result=uploads/qrcodes/student_83.png
+[2026-02-28 09:00:49] REQUEST method=POST student_id=574 rawInput={"student_id":"574"} POST=[]
+[2026-02-28 09:00:49] STUDENT_LOOKUP id=574 found=1
+[2026-02-28 09:00:50] QR_GENERATION id=574 result=uploads/qrcodes/student_574.png
+[2026-02-28 09:00:58] REQUEST method=POST student_id=104 rawInput={"student_id":"104"} POST=[]
+[2026-02-28 09:00:58] STUDENT_LOOKUP id=104 found=1
+[2026-02-28 09:00:59] QR_GENERATION id=104 result=uploads/qrcodes/student_104.png
+[2026-02-28 09:01:20] REQUEST method=POST student_id=571 rawInput={"student_id":"571"} POST=[]
+[2026-02-28 09:01:20] STUDENT_LOOKUP id=571 found=1
+[2026-02-28 09:01:21] QR_GENERATION id=571 result=uploads/qrcodes/student_571.png
+[2026-02-28 09:04:31] REQUEST method=POST student_id=587 rawInput={"student_id":"587"} POST=[]
+[2026-02-28 09:04:31] STUDENT_LOOKUP id=587 found=1
+[2026-02-28 09:04:32] QR_GENERATION id=587 result=uploads/qrcodes/student_587.png
+[2026-02-28 09:04:42] REQUEST method=POST student_id=585 rawInput={"student_id":"585"} POST=[]
+[2026-02-28 09:04:42] STUDENT_LOOKUP id=585 found=1
+[2026-02-28 09:04:43] QR_GENERATION id=585 result=uploads/qrcodes/student_585.png
+[2026-02-28 09:04:56] REQUEST method=POST student_id=576 rawInput={"student_id":"576"} POST=[]
+[2026-02-28 09:04:56] STUDENT_LOOKUP id=576 found=1
+[2026-02-28 09:04:57] QR_GENERATION id=576 result=uploads/qrcodes/student_576.png
+[2026-02-28 09:05:03] REQUEST method=POST student_id=588 rawInput={"student_id":"588"} POST=[]
+[2026-02-28 09:05:03] STUDENT_LOOKUP id=588 found=1
+[2026-02-28 09:05:05] QR_GENERATION id=588 result=uploads/qrcodes/student_588.png
+[2026-02-28 09:05:14] REQUEST method=POST student_id=110 rawInput={"student_id":"110"} POST=[]
+[2026-02-28 09:05:14] STUDENT_LOOKUP id=110 found=1
+[2026-02-28 09:05:15] QR_GENERATION id=110 result=uploads/qrcodes/student_110.png
+[2026-02-28 09:05:22] REQUEST method=POST student_id=95 rawInput={"student_id":"95"} POST=[]
+[2026-02-28 09:05:22] STUDENT_LOOKUP id=95 found=1
+[2026-02-28 09:05:23] QR_GENERATION id=95 result=uploads/qrcodes/student_95.png
+[2026-02-28 09:05:29] REQUEST method=POST student_id=570 rawInput={"student_id":"570"} POST=[]
+[2026-02-28 09:05:29] STUDENT_LOOKUP id=570 found=1
+[2026-02-28 09:05:30] QR_GENERATION id=570 result=uploads/qrcodes/student_570.png

@@ -213,21 +213,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ");
                         $stmt->execute([$lrn, $firstName, $lastName, $middleName, $sex, $mobileNumber, $email, $class, $section]);
                         
-                        // Get the newly inserted student ID
-                        $newStudentId = $pdo->lastInsertId();
-                        
-                        // Generate QR code automatically
+                        // Get the newly inserted student ID. Use a reliable lookup by LRN
+                        $stmt = $pdo->prepare("SELECT id FROM students WHERE lrn = ? ORDER BY created_at DESC LIMIT 1");
+                        $stmt->execute([$lrn]);
+                        $newStudent = $stmt->fetch(PDO::FETCH_ASSOC);
+                        $newStudentId = $newStudent ? intval($newStudent['id']) : 0;
+
+                        // Generate QR code automatically (only if we have an ID)
                         $studentFullName = trim($firstName . ' ' . $middleName . ' ' . $lastName);
-                        $qrCodePath = generateStudentQRCode($newStudentId, $lrn, $studentFullName);
+                        $qrCodePath = $newStudentId > 0 ? generateStudentQRCode($newStudentId, $lrn, $studentFullName) : false;
                         
-                        // Update student record with QR code path
-                        if ($qrCodePath) {
+                        // Update student record with QR code path if generated
+                        if ($qrCodePath && $newStudentId > 0) {
                             $updateStmt = $pdo->prepare("UPDATE students SET qr_code = ? WHERE id = ?");
                             $updateStmt->execute([$qrCodePath, $newStudentId]);
-                            
                             $message = "Student added successfully with QR code generated!";
                         } else {
-                            $message = "Student added successfully, but QR code generation failed. You can regenerate it later.";
+                            $message = "Student added successfully, but QR code generation failed or student ID unavailable. You can regenerate it later.";
                         }
                         
                         $messageType = "success";

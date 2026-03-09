@@ -2075,12 +2075,14 @@ async function confirmDelete() {
     confirmBtn.disabled = true;
     
     try {
-        const formData = new FormData();
-        formData.append('student_id', currentDeleteId);
-        
+        // Send as JSON instead of FormData to ensure proper parsing
         const response = await fetch('../api/delete_student.php', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ student_id: currentDeleteId })
         });
         
         const data = await response.json();
