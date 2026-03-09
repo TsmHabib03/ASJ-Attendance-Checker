@@ -13,8 +13,8 @@ return [
     // Database
     'DB_HOST' => 'localhost',
     'DB_USER' => 'root',
-    'DB_PASS' => '',
-    'DB_NAME' => 'asj_attendease_db',
+    'DB_PASS' => 'muning0328',
+    'DB_NAME' => 'asj_attendease_db2',
 
     // Email (SMTP)
     'SMTP_HOST' => 'smtp.gmail.com',
