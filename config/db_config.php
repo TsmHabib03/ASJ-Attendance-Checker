@@ -28,7 +28,10 @@ $getConfig = static function (string $key, $default = '') use ($secrets) {
 define('DB_HOST', $getConfig('DB_HOST', 'localhost'));
 define('DB_USER', $getConfig('DB_USER', 'root')); // Default username should be root
 define('DB_PASS', $getConfig('DB_PASS', '')); // Set in secrets.local.php or env
-define('DB_NAME', $getConfig('DB_NAME', 'asj_attendease_db2')); // Database name
+define('DB_NAME', $getConfig('DB_NAME', 'asj_attendease_db2'));
+
+
+')); // Database name
 define('DB_CHARSET', $getConfig('DB_CHARSET', 'utf8mb4'));
 
 // Set timezone
