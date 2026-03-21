@@ -1,5 +1,7 @@
 # Academy of St. Joseph Claveria, Cagayan Inc. Attendance Checker
 
+> **Portfolio Summary:** A QR code-based attendance management system built for Academy of St. Joseph Claveria, Cagayan Inc. The system uses students' official LRN (Learner Reference Number) and teacher Employee IDs to generate unique QR codes, enabling fast and accurate attendance tracking via camera scan or manual entry. It features AM/PM session handling, automatic late detection, real-time admin dashboard with charts, behavior monitoring, achievement badges, multi-gateway SMS notifications, and role-based access for Admin, Teacher, Staff, and Student users. Built with PHP 8+, MySQL 8, JavaScript, and Chart.js.
+
 A comprehensive web-based attendance management system using QR code scanning technology and LRN (Learner Reference Number) identification. Built with modern web technologies including HTML5, CSS3, JavaScript, PHP 8+, and MySQL 8.
 
 This system was developed as part of a research project to modernize and streamline the attendance tracking process at Academy of St. Joseph Claveria, Cagayan Inc., providing an efficient and accurate solution for monitoring student attendance through QR code technology.
