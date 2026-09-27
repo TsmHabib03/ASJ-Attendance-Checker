@@ -1,0 +1,24 @@
+# --- Local secrets: never commit credentials ---
+.env
+.env.*
+config/secrets.local.php
+# NOTE: config/secrets.local.php is still tracked from before.
+# After placing real values in it, untrack it once with:
+#   git rm --cached config/secrets.local.php
+
+# --- Local tooling / editor / agent worktrees ---
+.kilo/
+.sixth/
+node_modules/
+.vscode/
+.idea/
+
+# --- Capture, test and log artifacts ---
+._report.json
+*.log
+*.tmp
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+desktop.ini
