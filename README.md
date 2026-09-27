@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="readMeAssets/banner.png" alt="ASJ AttendEase — QR Attendance, Behavior Monitoring, Badges, SMS Alerts" width="100%">
+</p>
+
 # 🎓 Academy of St. Joseph Claveria, Cagayan Inc. Attendance Checker
 
 ![build](https://img.shields.io/badge/build-local%20verified-brightgreen?style=flat-square)
@@ -51,15 +55,45 @@ tracking at Academy of St. Joseph Claveria, Cagayan Inc.
 
 ## 🖼️ Product tour
 
-Click any thumbnail for the full-size capture. All 24 screenshots, their routes and the
-capture methodology are listed in [`readMeAssets/INDEX.md`](readMeAssets/INDEX.md).
+All 24 screenshots below are linked at full size; capture routes, roles and methodology are
+documented in [`readMeAssets/INDEX.md`](readMeAssets/INDEX.md).
+
+<p align="center">
+  <a href="readMeAssets/06_admin_dashboard.jpg">
+    <img src="readMeAssets/06_admin_dashboard.jpg" alt="Admin dashboard" width="920">
+  </a>
+  <br>
+  <sub><b>Admin dashboard</b> — today's counters, 7-day present/absent trend, section donut and activity feed</sub>
+</p>
+
+**Public site & authentication**
 
 | | | |
 |:--:|:--:|:--:|
-| [<img width="360" src="readMeAssets/01_landing.jpg" alt="Public landing page">](readMeAssets/01_landing.jpg)<br><sub>Public landing page</sub> | [<img width="360" src="readMeAssets/02_scan_qr.jpg" alt="QR scanner kiosk">](readMeAssets/02_scan_qr.jpg)<br><sub>QR scanner kiosk (live camera)</sub> | [<img width="360" src="readMeAssets/03_login.jpg" alt="Admin sign-in">](readMeAssets/03_login.jpg)<br><sub>Admin sign-in</sub> |
-| [<img width="360" src="readMeAssets/06_admin_dashboard.jpg" alt="Admin dashboard">](readMeAssets/06_admin_dashboard.jpg)<br><sub>Admin dashboard — stats & charts</sub> | [<img width="360" src="readMeAssets/07_manage_students.jpg" alt="Manage students">](readMeAssets/07_manage_students.jpg)<br><sub>Manage students</sub> | [<img width="360" src="readMeAssets/09_students_directory.jpg" alt="Students directory">](readMeAssets/09_students_directory.jpg)<br><sub>Students directory</sub> |
-| [<img width="360" src="readMeAssets/14_attendance_reports.jpg" alt="Attendance reports">](readMeAssets/14_attendance_reports.jpg)<br><sub>Attendance reports</sub> | [<img width="360" src="readMeAssets/15_behavior_monitoring.jpg" alt="Behavior monitoring">](readMeAssets/15_behavior_monitoring.jpg)<br><sub>Behavior monitoring</sub> | [<img width="360" src="readMeAssets/17_students_table.jpg" alt="Students table">](readMeAssets/17_students_table.jpg)<br><sub>Students table</sub> |
-| [<img width="360" src="readMeAssets/18_teacher_dashboard.jpg" alt="Teacher dashboard">](readMeAssets/18_teacher_dashboard.jpg)<br><sub>Teacher dashboard</sub> | [<img width="360" src="readMeAssets/21_staff_dashboard.jpg" alt="Staff dashboard">](readMeAssets/21_staff_dashboard.jpg)<br><sub>Staff dashboard</sub> | [<img width="360" src="readMeAssets/23_export_attendance_pdf.jpg" alt="PDF export">](readMeAssets/23_export_attendance_pdf.jpg)<br><sub>PDF export</sub> |
+| [<img width="360" src="readMeAssets/01_landing.jpg" alt="Landing page">](readMeAssets/01_landing.jpg)<br><sub>Landing page</sub> | [<img width="360" src="readMeAssets/02_scan_qr.jpg" alt="QR scanner kiosk">](readMeAssets/02_scan_qr.jpg)<br><sub>Scanner kiosk (live camera)</sub> | [<img width="360" src="readMeAssets/03_login.jpg" alt="Sign-in">](readMeAssets/03_login.jpg)<br><sub>Sign-in</sub> |
+| [<img width="360" src="readMeAssets/04_forgot_password.jpg" alt="Forgot password">](readMeAssets/04_forgot_password.jpg)<br><sub>Forgot password</sub> | [<img width="360" src="readMeAssets/05_reset_password.jpg" alt="Reset password">](readMeAssets/05_reset_password.jpg)<br><sub>Reset password</sub> | |
+
+**Admin console**
+
+| | | |
+|:--:|:--:|:--:|
+| [<img width="360" src="readMeAssets/07_manage_students.jpg" alt="Manage students">](readMeAssets/07_manage_students.jpg)<br><sub>Manage students</sub> | [<img width="360" src="readMeAssets/08_manage_teachers.jpg" alt="Manage teachers">](readMeAssets/08_manage_teachers.jpg)<br><sub>Manage teachers</sub> | [<img width="360" src="readMeAssets/09_students_directory.jpg" alt="Students directory">](readMeAssets/09_students_directory.jpg)<br><sub>Students directory</sub> |
+| [<img width="360" src="readMeAssets/10_manage_sections.jpg" alt="Manage sections">](readMeAssets/10_manage_sections.jpg)<br><sub>Manage sections</sub> | [<img width="360" src="readMeAssets/11_manage_schedules.jpg" alt="Manage schedules">](readMeAssets/11_manage_schedules.jpg)<br><sub>Manage schedules</sub> | [<img width="360" src="readMeAssets/12_manage_badges.jpg" alt="Manage badges">](readMeAssets/12_manage_badges.jpg)<br><sub>Badges & leaderboard</sub> |
+| [<img width="360" src="readMeAssets/13_manual_attendance.jpg" alt="Manual attendance">](readMeAssets/13_manual_attendance.jpg)<br><sub>Manual attendance</sub> | [<img width="360" src="readMeAssets/14_attendance_reports.jpg" alt="Attendance reports">](readMeAssets/14_attendance_reports.jpg)<br><sub>Attendance reports</sub> | [<img width="360" src="readMeAssets/15_behavior_monitoring.jpg" alt="Behavior monitoring">](readMeAssets/15_behavior_monitoring.jpg)<br><sub>Behavior monitoring</sub> |
+| [<img width="360" src="readMeAssets/16_sms_logs.jpg" alt="SMS logs">](readMeAssets/16_sms_logs.jpg)<br><sub>SMS logs</sub> | | |
+
+**Teacher & staff portals**
+
+| | | |
+|:--:|:--:|:--:|
+| [<img width="360" src="readMeAssets/18_teacher_dashboard.jpg" alt="Teacher dashboard">](readMeAssets/18_teacher_dashboard.jpg)<br><sub>Teacher dashboard</sub> | [<img width="360" src="readMeAssets/19_teacher_students_directory.jpg" alt="Teacher students directory">](readMeAssets/19_teacher_students_directory.jpg)<br><sub>Teacher · students directory</sub> | [<img width="360" src="readMeAssets/20_teacher_behavior_monitoring.jpg" alt="Teacher behavior monitoring">](readMeAssets/20_teacher_behavior_monitoring.jpg)<br><sub>Teacher · behavior monitoring</sub> |
+| [<img width="360" src="readMeAssets/17_students_table.jpg" alt="Students table">](readMeAssets/17_students_table.jpg)<br><sub>Class students table</sub> | [<img width="360" src="readMeAssets/21_staff_dashboard.jpg" alt="Staff dashboard">](readMeAssets/21_staff_dashboard.jpg)<br><sub>Staff dashboard</sub> | [<img width="360" src="readMeAssets/22_staff_students_directory.jpg" alt="Staff students directory">](readMeAssets/22_staff_students_directory.jpg)<br><sub>Staff · students directory</sub> |
+
+**Exports**
+
+| | |
+|:--:|:--:|
+| [<img width="440" src="readMeAssets/23_export_attendance_pdf.jpg" alt="PDF export">](readMeAssets/23_export_attendance_pdf.jpg)<br><sub>PDF export</sub> | [<img width="440" src="readMeAssets/24_export_attendance_csv.jpg" alt="CSV export">](readMeAssets/24_export_attendance_csv.jpg)<br><sub>CSV export</sub> |
 
 ## 🧭 Modules
 
@@ -140,10 +174,14 @@ the PHP built-in server, and a camera-capable browser for the scanner.
 
 2. **Configure credentials.** The app reads `DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME`
    (plus SMTP/SMS keys) from environment variables first, then from
-   `config/secrets.local.php`:
+   `config/secrets.local.php`. Start from the committed template:
+
+   ```bash
+   cp config/secrets.example.php config/secrets.local.php
+   ```
 
    ```php
-   // config/secrets.local.php
+   // config/secrets.local.php   (git-ignored — never commit it)
    return [
        'DB_HOST' => 'localhost',
        'DB_USER' => 'root',
@@ -175,7 +213,7 @@ Academy-of-St.Joseph-Claveria-Cagayan-Inc.-Attendance-Checker/
 │   ├── includes/                # header/footer + Chart.js wiring
 │   └── api/dashboard_stats.php  # Role-checked dashboard data
 ├── api/                         # 17 JSON handlers behind api/bootstrap.php
-├── config/                      # db_config.php, sms/email config, secrets.local.php
+├── config/                      # db_config.php, sms/email config, secrets.example.php
 ├── includes/                    # PDO database class, QR helper, navigation
 ├── css/  js/                    # 11 stylesheets, 5 scripts
 ├── libs/PHPMailer/              # Vendored mail library
@@ -233,8 +271,10 @@ Latest verification: 24/24 images present, manifest ↔ files match in both dire
   `reset_token_expires_at` while every dump defines `reset_token_expires`.
 - Dead links: `admin/attendance_reports.php` (404, still referenced from
   `manage_students.php`) and `admin/my_attendance.php` (404, in the nav menu).
-- `config/secrets.local.php` is tracked by git — untrack it and rotate the values before
-  any public release.
+- Secrets live in `config/secrets.local.php` (git-ignored, untracked) with a committed
+  placeholder template `config/secrets.example.php`; hard-coded fallback passwords were
+  scrubbed from `db_config.php` / `email_config.php`. **Rotate** the old SMTP/DB values —
+  they still exist in git history.
 - CSRF is not applied to every form; the legacy seed password is MD5; no CSP/HSTS headers
   yet (`.htaccess` only disables directory listing and `X-Powered-By`).
 

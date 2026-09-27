@@ -31,7 +31,7 @@ define('SMTP_AUTH', true);
 
 // SMTP Credentials
 define('SMTP_USERNAME', $getConfig('SMTP_USERNAME', 'asjclaveriaattendance@gmail.com'));
-define('SMTP_PASSWORD', $getConfig('SMTP_PASSWORD', 'otnrczhculmiojop'));
+define('SMTP_PASSWORD', $getConfig('SMTP_PASSWORD', ''));
 
 // Sender Information
 define('MAIL_FROM_EMAIL', $getConfig('MAIL_FROM_EMAIL', SMTP_USERNAME));

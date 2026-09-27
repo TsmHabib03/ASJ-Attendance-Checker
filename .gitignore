@@ -1,10 +1,13 @@
 # --- Local secrets: never commit credentials ---
 .env
 .env.*
+*.local.php
 config/secrets.local.php
-# NOTE: config/secrets.local.php is still tracked from before.
-# After placing real values in it, untrack it once with:
-#   git rm --cached config/secrets.local.php
+credentials*.json
+*_creds.json
+*.pem
+*.key
+*.p12
 
 # --- Local tooling / editor / agent worktrees ---
 .kilo/
